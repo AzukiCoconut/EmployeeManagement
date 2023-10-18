@@ -58,17 +58,24 @@ class DB {
             "UPDATE employee SET role_id = ? WHERE id = ?", [role_id, id]
         );
     }
+
+    updateEmployeeManager(id, manager_id) {
+        return this.connection.promise().query(
+            "UPDATE employee SET manager_id = ? WHERE id = ?", [manager_id, id]
+        );
+    }
+
+    viewEmployeesByManager() {
+        return this.connection.promise().query(
+            "SELECT CONCAT(b.first_name, ' ', b.last_name) as manager, a.first_name as 'first name', a.last_name as 'last name' FROM employee as a LEFT JOIN employee as b ON a.manager_id = b.id order by manager desc"
+            );
+    }
+
+    viewEmployeesByDepartment() {
+        return this.connection.promise().query(
+            "SELECT d.name as Department, concat(e.first_name, ' ',e.last_name) as name FROM department as d JOIN role as r ON r.department_id = d.id JOIN employee as e ON e.role_id = r.id ORDER BY d.name"
+        );
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = new DB(connection);
