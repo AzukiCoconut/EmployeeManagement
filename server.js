@@ -45,6 +45,18 @@ function loadMainPrompts() {
                     value: "UPDATE_EMPLOYEE_ROLE"
                 },
                 {
+                    name: "Update an Employee's manager",
+                    value: "UPDATE_EMPLOYEE_MANAGER"
+                },
+                {
+                    name: "View Employees by Manager",
+                    value: "VIEW_EMPLOYEES_BY_MANAGER"
+                },
+                {
+                    name: "View Employees by Department",
+                    value: "VIEW_EMPLOYEES_BY_DEPT"
+                },
+                {
                     name: "Quit",
                     value: "QUIT"
                 },
@@ -74,6 +86,15 @@ function loadMainPrompts() {
                 break;
             case "UPDATE_EMPLOYEE_ROLE":
                 updateEmployeeRole();
+                break;
+            case "UPDATE_EMPLOYEE_MANAGER":
+                updateEmployeeManager();
+                break;
+            case "VIEW_EMPLOYEES_BY_MANAGER":
+                viewEmployeesByManager();
+                break;
+            case "VIEW_EMPLOYEES_BY_DEPT":
+                viewEmployeesByDepartment();
                 break;
             default:
                 quit();
@@ -256,6 +277,64 @@ function updateEmployeeRole() {
     })
     
 }
+
+function updateEmployeeManager() {
+    db.getEmployees().then(([rows]) => {
+        let employees = rows;
+        const employeeChoices = employees.map(({id, name}) => ({
+            name: name, 
+            value: id
+        }));
+        prompt([
+            {
+                type: "list",
+                name: "employeeID",
+                message: "Which employee would you like to add a manager to?",
+                choices: employeeChoices
+            }
+        ])
+        .then(res => {
+            let employeeID = res.employeeID;
+            db.getManagers().then(([rows]) => {
+                let managers = rows;
+                const managerChoices = managers.map(({id, name}) => ({
+                    name: name,
+                    value: id
+                }));
+                prompt([
+                    {
+                        type: "list",
+                        name: "managerID",
+                        message: "Which manager would you like to assign?",
+                        choices: managerChoices
+                    }
+                ])
+                .then(res => db.updateEmployeeManager(employeeID, res.managerID))
+                .then(() => console.log('Employee manager updated'))
+                .then(() => loadMainPrompts())
+            })
+        })
+    })
+}
+
+function viewEmployeesByManager() {
+    db.viewEmployeesByManager().then (([rows]) => {
+        let list = rows;
+        console.log("\n");
+        console.table(list);
+    })
+    .then (() => loadMainPrompts());
+}
+
+function viewEmployeesByDepartment() {
+    db.viewEmployeesByDepartment().then(([rows]) => {
+        let list = rows;
+        console.log("\n");
+        console.table(list);
+    })
+    .then (() => loadMainPrompts());
+}
+
 
 function quit() {
     process.exit(0);
