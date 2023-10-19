@@ -9,6 +9,8 @@ A system that manages employees within an organization.  This application uses t
 
 Below is a link to the walkthrough video of the working application.
 
+https://drive.google.com/file/d/1t5ubAQFU-rmXFUSL2C_twqBtN3u_eEyH/view
+
 
 
 ## Credits
