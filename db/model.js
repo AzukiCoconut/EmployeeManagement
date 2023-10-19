@@ -76,6 +76,30 @@ class DB {
             "SELECT d.name as Department, concat(e.first_name, ' ',e.last_name) as name FROM department as d JOIN role as r ON r.department_id = d.id JOIN employee as e ON e.role_id = r.id ORDER BY d.name"
         );
     }
+
+    getRolesByDepartment(dept_id) {
+        return this.connection.promise().query(
+            "SELECT * FROM role WHERE department_id = ?", dept_id
+        );
+    }
+
+    deleteDepartment(id) {
+        return this.connection.promise().query(
+            "DELETE FROM department WHERE id = ?", id
+        );
+    }
+
+    deleteRole(id) {
+        return this.connection.promise().query(
+            "DELETE FROM role WHERE id = ?", id
+        );
+    }
+
+    deleteEmployee(id) {
+        return this.connection.promise().query(
+            "DELETE FROM employee WHERE id = ?", id
+        );
+    }
 }
 
 module.exports = new DB(connection);

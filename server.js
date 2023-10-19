@@ -335,7 +335,6 @@ function viewEmployeesByDepartment() {
     .then (() => loadMainPrompts());
 }
 
-
 function quit() {
     process.exit(0);
 }
