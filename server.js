@@ -1,14 +1,15 @@
 const {prompt} = require('inquirer');
 const db = require('./db/model');
-const logo = require("asciiart-logo");
 
-
+// initiate application
 init();
 
+// Init() function
 function init() {
     loadMainPrompts();
 }
 
+// function to load the main prompts
 function loadMainPrompts() {
     prompt([
         {
@@ -62,7 +63,7 @@ function loadMainPrompts() {
                 },
             ]
         },
-    ])
+    ])  // handle the prompt responses
     .then((data) => {
         let choice = data.choice;
         switch (choice) {
@@ -102,7 +103,7 @@ function loadMainPrompts() {
     });    
 }
 
-
+// get and display a table of departments
 function viewDepartments() {
     db.getAllDepartments().then (([rows]) => {
         let departments = rows;
@@ -112,6 +113,7 @@ function viewDepartments() {
     .then (() => loadMainPrompts());
 }
 
+// get and display a table of roles
 function viewRoles() {
     db.getAllRoles().then(([rows]) => {
         let roles = rows;
@@ -121,6 +123,7 @@ function viewRoles() {
     .then(() => loadMainPrompts());
 }
 
+// get and display a table of employees
 function viewEmployees() {
     db.getAllEmployees().then(([rows]) => {
         let employees = rows;
@@ -130,6 +133,7 @@ function viewEmployees() {
     .then(() => loadMainPrompts());
 }
 
+// a function to add a department
 function addDepartment() {
     prompt([
         {
@@ -143,6 +147,7 @@ function addDepartment() {
     .then(() => loadMainPrompts());
 }
 
+// a function to add a role
 function addRole() {
     prompt([
         {
@@ -156,7 +161,7 @@ function addRole() {
             message: "What is the salary for this role?"
         }
     ])
-    .then (res => {
+    .then (res => {  // list the department names to choose from
         let title = res.roleTitle;
         let salary = res.salary;
         db.getAllDepartments().then(([rows]) => {
@@ -181,6 +186,7 @@ function addRole() {
     })
 }
 
+// a function to add an employee
 function addEmployee() {
     prompt([
         {
@@ -194,7 +200,7 @@ function addEmployee() {
             message: "What is the employee's last name?"
         }
     ])
-    .then(res => {
+    .then(res => { // list the role names to choose from
         let firstName = res.firstName;
         let lastName = res.lastName;
         db.getAllRoles().then(([rows]) => {
@@ -212,7 +218,7 @@ function addEmployee() {
                     choices: roleChoices
                 }
             ])
-            .then(res => {
+            .then(res => { // List the manager names to choose from
                 let role = res.roleID;
                 db.getManagers().then(([rows]) => {
                     let managers = rows;
@@ -238,6 +244,7 @@ function addEmployee() {
     })
 }
 
+// A function to update an employee's role
 function updateEmployeeRole() {
     db.getEmployees().then(([rows]) => {
         let employees = rows;
@@ -253,7 +260,7 @@ function updateEmployeeRole() {
                 choices: employeeChoices
             }
         ])
-        .then(res => {
+        .then(res => { // list the roles to update
             let employeeID = res.employeeID;
             db.getAllRoles().then(([rows]) => {
                 let roles = rows;
@@ -278,6 +285,7 @@ function updateEmployeeRole() {
     
 }
 
+// a function to update the employee manager
 function updateEmployeeManager() {
     db.getEmployees().then(([rows]) => {
         let employees = rows;
@@ -293,7 +301,7 @@ function updateEmployeeManager() {
                 choices: employeeChoices
             }
         ])
-        .then(res => {
+        .then(res => { // List the manager names
             let employeeID = res.employeeID;
             db.getManagers().then(([rows]) => {
                 let managers = rows;
@@ -317,6 +325,7 @@ function updateEmployeeManager() {
     })
 }
 
+// a function to display the list of employees by manager
 function viewEmployeesByManager() {
     db.viewEmployeesByManager().then (([rows]) => {
         let list = rows;
@@ -326,6 +335,7 @@ function viewEmployeesByManager() {
     .then (() => loadMainPrompts());
 }
 
+// a function to display the list of employees by department
 function viewEmployeesByDepartment() {
     db.viewEmployeesByDepartment().then(([rows]) => {
         let list = rows;
@@ -335,6 +345,7 @@ function viewEmployeesByDepartment() {
     .then (() => loadMainPrompts());
 }
 
+// Quit the application
 function quit() {
     process.exit(0);
 }
